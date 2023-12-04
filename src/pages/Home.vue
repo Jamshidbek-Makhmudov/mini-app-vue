@@ -1,7 +1,10 @@
 <template>
   <Navbar />
   Home
-  <div v-for="product of products">{{ product.title }}</div>
+  akdfana;
+  lf;
+  almd
+  <div v-for="product of products" :key="product">{{ product.title }}</div>
 </template>
 
 <script setup>
