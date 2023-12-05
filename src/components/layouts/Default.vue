@@ -1,4 +1,5 @@
 <template>
+    <Navbar />
   <div>
     <slot />
   </div>
@@ -7,6 +8,7 @@
 <script setup>
 import { onMounted } from "vue";
 import { useStore } from "vuex";
+import Navbar from "../Navbar.vue";
 
 const store = useStore();
 
