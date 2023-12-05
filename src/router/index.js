@@ -14,8 +14,9 @@ import {
 import Home from "../pages/Home.vue";
 import Login from "../pages/Login.vue";
 import { notFound } from "./notFound";
-
+import  store from "../store"
 const router = createRouter({
+
   history: createWebHistory(),
 
   routes: [
@@ -60,12 +61,37 @@ const router = createRouter({
   ],
 });
 
+//tokenni eskirgan yoki yoqligini tekshirish:
+function decodeJwt(token) { 
+  if (token) {
+    const base64Payload = token.split(".")[1];
+    // const payloadBuffer = Buffer.from(base64Payload, "base64"); //this for wabpack instalemnts
+    const payloadBuffer = window.atob(base64Payload );  //this when wokring qith vite projects 
+    return JSON.parse(payloadBuffer.toString());
+  } else { 
+    return {exp:0}
+  }
+}
+
+
+
 //before resolve ishlashidan oldin
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("token");
-  if (to.name !== "login" && !token) {
-    next({ name: "login" });
-  } else if (token && to.name === RT_LOGIN) {
+
+  const parsedToken = decodeJwt(token);
+  
+  const isTokenExpired = parsedToken.exp < Date.now() / 1000; //boolean true qaytsa kirgasmalik kerak
+  
+  console.log("token life is? :=>", parsedToken.exp );
+  console.log("is token expired? :=>", isTokenExpired);
+  
+ 
+
+if (to.name !== RT_LOGIN && isTokenExpired) {
+    // next({ name: "login" });
+    store.commit("LOGOUT")
+  } else if (!isTokenExpired && to.name === RT_LOGIN) {
     next({ name: from.name });
   } else {
     next();

@@ -62,6 +62,10 @@ const store = createStore({
       localStorage.removeItem("token");
       router.push({ name: RT_LOGIN });
     },
+    CLEAR_TOKEN: (state) => {
+      state.user = {};
+      localStorage.removeItem("token");
+    },
   },
 });
 
