@@ -14,8 +14,9 @@ import {
 import Home from "../pages/Home.vue";
 import Login from "../pages/Login.vue";
 import { notFound } from "./notFound";
-
+import  store from "../store"
 const router = createRouter({
+
   history: createWebHistory(),
 
   routes: [
@@ -72,14 +73,25 @@ function decodeJwt(token) {
   }
 }
 
+
+
 //before resolve ishlashidan oldin
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("token");
-  console.log("token is :=>", decodeJwt(token));
+
+  const parsedToken = decodeJwt(token);
   
-  if (to.name !== "login" && !token) {
-    next({ name: "login" });
-  } else if (token && to.name === RT_LOGIN) {
+  const isTokenExpired = parsedToken.exp < Date.now() / 1000; //boolean true qaytsa kirgasmalik kerak
+  
+  console.log("token life is? :=>", parsedToken.exp );
+  console.log("is token expired? :=>", isTokenExpired);
+  
+ 
+
+if (to.name !== RT_LOGIN && isTokenExpired) {
+    // next({ name: "login" });
+    store.commit("LOGOUT")
+  } else if (!isTokenExpired && to.name === RT_LOGIN) {
     next({ name: from.name });
   } else {
     next();
