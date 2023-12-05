@@ -13,6 +13,7 @@ import {
 
 import Home from "../pages/Home.vue";
 import Login from "../pages/Login.vue";
+import { notFound } from "./notFound";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -53,10 +54,13 @@ const router = createRouter({
         layout: "Auth",
         title: MT_LOGIN,
       },
+      
     },
+    notFound
   ],
 });
 
+//before resolve ishlashidan oldin
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("token");
   if (to.name !== "login" && !token) {
@@ -68,6 +72,7 @@ router.beforeEach((to, from, next) => {
   }
 });
 
+//router ishlashidan oldin
 router.beforeResolve(async (to, from) => {
   await layoutMiddleware(to);
   document.title = to.meta.title;

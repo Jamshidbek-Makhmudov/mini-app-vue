@@ -2,11 +2,11 @@
   <nav
     class="bg-secondary py-3 flex justify-between items-center text-white px-3"
   >
-    <router-link to="/"> Logo </router-link>
+    <a href="/" class="link"> Logo </a>
     <div class="w-[25%] flex justify-between items-center">
-      <router-link to="/">Home</router-link>
-      <router-link to="/about">About</router-link>
-      <router-link to="/cart">Cart</router-link>
+      <router-link class="link" to="/">Home</router-link>
+      <router-link class="link" to="/about">About</router-link>
+      <router-link class="link" to="/cart">Cart</router-link>
       <Button
         class="btn-warning"
         @click="logout"
@@ -27,4 +27,14 @@ function logout() {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.link{
+  
+  border-bottom:2px transparent solid;
+  padding-bottom:5px;
+  transition: all 0.4s;
+}
+.router-link-exact-active{
+  border-bottom:2px white solid;
+}
+</style>
