@@ -2,6 +2,7 @@ import { createStore } from "vuex";
 import axios from "axios";
 import router from "../router";
 import { RT_HOME, RT_LOGIN } from "../constants/routeNames";
+import products from "./modules/products";
 
 const url = import.meta.env.VITE_BASE_URL;
 
@@ -9,13 +10,10 @@ const store = createStore({
   /**state bu ozi malumotlarni inital qiymatini ushlab turadi va apidan malumot olin kelgandan sonmg esa stateni shu malumotlarga tenglab qoyamiz */
   state: {
     user: {},
-    products: [],
   },
 
   //buni vazifasi statedan faqri malumotlarni cashe qiladi va statedan olib beradi bir mastra cashe qivosa keyin shbu yersdan olib beraaveradi
-  getters: {
-    products: (state) => state.products,
-  },
+  getters: {},
 
   actions: {
     //action yayhna apidan keladigan malumotlarni feth qilib olib kelish vazifasini bajaradi
@@ -29,14 +27,6 @@ const store = createStore({
       }
       commit("SET_TOKEN", res.data.token); //commit bu mutation 1- param mutation ichidagi functionni nomi 2-param unga beriladigan payload yani function uchun param
       commit("SET_USER", res.data);
-    },
-
-    async fetchProducts({ commit }) {
-      const res = await axios.get(url + "products");
-      if (!res.data?.products && res.status !== 200) {
-        return;
-      }
-      commit("SET_PRODUTS", res.data.products);
     },
   },
 
@@ -55,18 +45,16 @@ const store = createStore({
       router.push({ name: RT_HOME });
     },
 
-    SET_PRODUTS: (state, payload) => (state.products = payload),
-
     LOGOUT: (state) => {
       state.user = {};
       localStorage.removeItem("token");
       router.push({ name: RT_LOGIN });
     },
-    CLEAR_TOKEN: (state) => {
-      state.user = {};
-      localStorage.removeItem("token");
-    },
   },
+
+  modules: {
+    products,
+  }
 });
 
 export default store;
