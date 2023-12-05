@@ -14,7 +14,8 @@ import {
 import Home from "../pages/Home.vue";
 import Login from "../pages/Login.vue";
 import { notFound } from "./notFound";
-import  store from "../store"
+import store from "../store"
+import NProgress from 'nprogress';
 const router = createRouter({
 
   history: createWebHistory(),
@@ -85,6 +86,11 @@ router.beforeEach((to, from, next) => {
   
   console.log("token life is? :=>", parsedToken.exp );
   console.log("is token expired? :=>", isTokenExpired);
+    // nProgress
+    if (to.name) {
+      // Start the route progress bar.
+      NProgress.start()
+  }
   
  
 
@@ -96,6 +102,7 @@ if (to.name !== RT_LOGIN && isTokenExpired) {
   } else {
     next();
   }
+
 });
 
 //router ishlashidan oldin
@@ -104,4 +111,7 @@ router.beforeResolve(async (to, from) => {
   document.title = to.meta.title;
 });
 
+router.afterEach((to, from) => { 
+        NProgress.done()
+})
 export default router;
