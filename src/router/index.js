@@ -60,9 +60,23 @@ const router = createRouter({
   ],
 });
 
+//tokenni eskirgan yoki yoqligini tekshirish:
+function decodeJwt(token) { 
+  if (token) {
+    const base64Payload = token.split(".")[1];
+    // const payloadBuffer = Buffer.from(base64Payload, "base64"); //this for wabpack instalemnts
+    const payloadBuffer = window.atob(base64Payload );  //this when wokring qith vite projects 
+    return JSON.parse(payloadBuffer.toString());
+  } else { 
+    return {exp:0}
+  }
+}
+
 //before resolve ishlashidan oldin
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("token");
+  console.log("token is :=>", decodeJwt(token));
+  
   if (to.name !== "login" && !token) {
     next({ name: "login" });
   } else if (token && to.name === RT_LOGIN) {
