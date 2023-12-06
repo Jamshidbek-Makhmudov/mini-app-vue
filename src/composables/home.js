@@ -6,11 +6,22 @@ export function useHome() {
   const store = useStore();
   const products = computed(() => store.getters.products);
   const loading = computed(() => store.state.loading);
-  const searchingTitle = ref('')
-  async function onSearchProducts(title) { 
-    
-     await store.dispatch("searchProducts", title);
+ const searchingTitle = ref("");
+  const onSearchProducts = async(text) => {
+ 
+  console.log("Search triggered for:", text);
+  
+      await store.dispatch("searchProducts", text);
   }
+
+
+
+
+  
+
+
+
+
 
   return {
     products,
