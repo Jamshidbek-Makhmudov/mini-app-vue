@@ -3,6 +3,7 @@ import axios from "axios";
 import router from "../router";
 import { RT_HOME, RT_LOGIN } from "../constants/routeNames";
 import products from "./modules/products";
+import { errorToast, successToast } from "../utils/toast";
 
 const url = import.meta.env.VITE_BASE_URL;
 
@@ -21,12 +22,19 @@ const store = createStore({
     //store dispatch qilish uni ishlatish va uni ichida action ishlaydi action payloadni va mutation(commitni )qabul qiladi payload backendga yuboriladigan data
     //ctx ni ichidan commit chiqadi commit- mutationga teng.  mutation action succes bolgan bajariladigan ozgarish
     async login({ commit }, payload) {
-      const res = await axios.post(url + "auth/login", payload);
-      if (!res.data?.token && res.status !== 200) {
-        return;
+      try {
+        
+        const res = await axios.post(url + "auth/login", payload);
+        if (!res.data?.token && res.status !== 200) {
+          return;
+        }
+        commit("SET_TOKEN", res.data.token); //commit bu mutation 1- param mutation ichidagi functionni nomi 2-param unga beriladigan payload yani function uchun param
+        commit("SET_USER", res.data);
+        successToast("succeesfully logged in")
+      } catch (error) {
+        errorToast("something went wrong")
+        
       }
-      commit("SET_TOKEN", res.data.token); //commit bu mutation 1- param mutation ichidagi functionni nomi 2-param unga beriladigan payload yani function uchun param
-      commit("SET_USER", res.data);
     },
   },
 
